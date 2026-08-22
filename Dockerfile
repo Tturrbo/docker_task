@@ -1,5 +1,9 @@
 FROM ubuntu:20.04
 
+LABEL \
+    maintainer="Elnukaev Ali" \
+    description="Тестовое задание N10"
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
