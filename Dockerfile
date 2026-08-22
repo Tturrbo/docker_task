@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-gnutls-dev \
     make \
-    gcc
+    gcc \
+    automake \
+    autoconf \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV SAMTOOLS_VER=1.24
 ENV BCFTOOLS_VER=1.24
