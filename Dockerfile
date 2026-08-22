@@ -31,15 +31,18 @@ RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/
     && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && rm -rf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && cd samtools-${SAMTOOLS_VER}/ \
-    && make && make install
+    && make && make install \
+    && cd .. && rm -rf samtools-${SAMTOOLS_VER}/
 RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && tar -xjf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && rm -rf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && cd bcftools-${BCFTOOLS_VER}/ \
-    && make && make install
+    && make && make install \
+    && cd .. && rm -rf bcftools-${BCFTOOLS_VER}/
 RUN wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
     && tar -xzf vcftools-${VCFTOOLS_VER}.tar.gz \
     && rm -rf vcftools-${VCFTOOLS_VER}.tar.gz \
     && cd vcftools-${VCFTOOLS_VER}/ \
     && ./configure \
-    && make && make install
+    && make && make install \
+    && cd .. && rm -rf vcftools-${VCFTOOLS_VER}/
