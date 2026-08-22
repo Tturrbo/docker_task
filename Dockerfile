@@ -41,4 +41,5 @@ RUN wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}
     && tar -xzf vcftools-${VCFTOOLS_VER}.tar.gz \
     && rm -rf vcftools-${VCFTOOLS_VER}.tar.gz \
     && cd vcftools-${VCFTOOLS_VER}/ \
+    && ./configure \
     && make && make install
