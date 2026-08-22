@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 
 ENV SAMTOOLS_VER=1.24
 ENV BCFTOOLS_VER=1.24
-
+ENV VCFTOOLS_VER=0.1.17
 
 RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
     && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
@@ -30,4 +30,9 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/
     && tar -xjf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && rm -rf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && cd bcftools-${BCFTOOLS_VER}/ \
+    && make && make install
+RUN wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
+    && tar -xzf vcftools-${VCFTOOLS_VER}.tar.gz \
+    && rm -rf vcftools-${VCFTOOLS_VER}.tar.gz \
+    && cd vcftools-${VCFTOOLS_VER}/ \
     && make && make install
