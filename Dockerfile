@@ -21,21 +21,13 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libtool \
     pkg-config \
-    cmake \
+    libdeflate-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SAMTOOLS_VER=1.24
 ENV BCFTOOLS_VER=1.24
 ENV VCFTOOLS_VER=0.1.17
-ENV LIBDEFLATE_VER=1.26
 
-RUN wget https://github.com/ebiggers/libdeflate/releases/download/v${LIBDEFLATE_VER}/libdeflate-${LIBDEFLATE_VER}.tar.gz \
-    && tar -xf libdeflate-${LIBDEFLATE_VER}.tar.gz \
-    && rm -rf libdeflate-${LIBDEFLATE_VER}.tar.gz \
-    && cd libdeflate-${LIBDEFLATE_VER}/ \
-    && mkdir build && cd build \
-    && cmake .. && cmake --build . && cmake --install . \
-    && cd .. && rm -rf libdeflate-${LIBDEFLATE_VER}/
 RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
     && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && rm -rf samtools-${SAMTOOLS_VER}.tar.bz2 \
