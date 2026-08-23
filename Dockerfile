@@ -24,28 +24,36 @@ RUN apt-get update && apt-get install -y \
     libdeflate-dev \
     && rm -rf /var/lib/apt/lists/*
 
+ENV SOFT="/soft"
 ENV SAMTOOLS_VER=1.24
 ENV BCFTOOLS_VER=1.24
 ENV VCFTOOLS_VER=0.1.17
 
-RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
+RUN cd /opt/ \
+    && wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
     && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && rm -rf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && cd samtools-${SAMTOOLS_VER}/ \
-    && ./configure --with-libdeflate\
+    && ./configure --with-libdeflate --prefix=${SOFT}/samtools_${SAMTOOLS_VER} \
     && make && make install \
-    && cd .. && rm -rf samtools-${SAMTOOLS_VER}/
-RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/bcftools-${BCFTOOLS_VER}.tar.bz2 \
+    && cd .. && rm -rf /opt/samtools-${SAMTOOLS_VER}/
+RUN cd /opt/ \
+    && wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && tar -xjf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && rm -rf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && cd bcftools-${BCFTOOLS_VER}/ \
-    && ./configure \
+    && ./configure --prefix=${SOFT}/bcftools_${BCFTOOLS_VER} \
     && make && make install \
-    && cd .. && rm -rf bcftools-${BCFTOOLS_VER}/
-RUN wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
+    && cd .. && rm -rf /opt/bcftools-${BCFTOOLS_VER}/
+RUN cd /opt/ \
+    && wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
     && tar -xzf vcftools-${VCFTOOLS_VER}.tar.gz \
     && rm -rf vcftools-${VCFTOOLS_VER}.tar.gz \
     && cd vcftools-${VCFTOOLS_VER}/ \
-    && ./configure \
+    && ./configure --prefix=${SOFT}/vcftools_${VCFTOOLS_VER} \
     && make && make install \
-    && cd .. && rm -rf vcftools-${VCFTOOLS_VER}/
+    && cd .. && rm -rf /opt/vcftools-${VCFTOOLS_VER}/
+
+ENV PATH="/soft/samtools_${SAMTOOLS_VER}/bin:/soft/bcftools_${BCFTOOLS_VER}/bin:/soft/vcftools_${VCFTOOLS_VER}/bin:${PATH}"   
+  
+CMD ["bin/bash"]
