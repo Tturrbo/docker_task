@@ -21,22 +21,33 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libtool \
     pkg-config \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SAMTOOLS_VER=1.24
 ENV BCFTOOLS_VER=1.24
 ENV VCFTOOLS_VER=0.1.17
+ENV LIBDEFLATE_VER=1.26
 
+RUN wget https://github.com/ebiggers/libdeflate/releases/download/v${LIBDEFLATE_VER}/libdeflate-${LIBDEFLATE_VER}.tar.gz \
+    && tar -xf libdeflate-${LIBDEFLATE_VER}.tar.gz \
+    && rm -rf libdeflate-${LIBDEFLATE_VER}.tar.gz \
+    && cd libdeflate-${LIBDEFLATE_VER}/ \
+    && mkdir build && cd build \
+    && cmake .. && cmake --build . && cmake --install . \
+    && cd .. && rm -rf libdeflate-${LIBDEFLATE_VER}/
 RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
     && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && rm -rf samtools-${SAMTOOLS_VER}.tar.bz2 \
     && cd samtools-${SAMTOOLS_VER}/ \
+    && ./configure --with-libdeflate\
     && make && make install \
     && cd .. && rm -rf samtools-${SAMTOOLS_VER}/
 RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && tar -xjf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && rm -rf bcftools-${BCFTOOLS_VER}.tar.bz2 \
     && cd bcftools-${BCFTOOLS_VER}/ \
+    && ./configure \
     && make && make install \
     && cd .. && rm -rf bcftools-${BCFTOOLS_VER}/
 RUN wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
