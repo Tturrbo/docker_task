@@ -1,4 +1,6 @@
+/chromosomes/*
 GRCh38.d1.vd1.fa
+GRCh38.d1.vd1.fai
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
