@@ -22,7 +22,7 @@ file_handler = logging.FileHandler("pipeline.log", mode='w', encoding='utf-8')
 file_handler.setFormatter(log_format)
 logger.addHandler(file_handler)
 
-CHROM_DIR = "chromosomes"
+CHROM_DIR = "/ref/GRCh38.d1.vd1_mainChr/sepChrs/"
 TARGET_CHROMOSOMES = set([f"chr{i}" for i in range(1, 23)] + ["chrX", "chrY", "chrM"])
 
 # Разбивает референсный геном на хромосомы и индексирует их(исключены хромосомы вида chrUnknown)
@@ -130,15 +130,12 @@ def process_alleles(input_file=None, output_file=None, chrom_dir=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Конвертация аллелей в формат REF ALT")
-    parser.add_argument("--fasta", required=True, help="Путь до файла референсого генома FASTA")
+    parser.add_argument("--fasta", required=False, help="Путь до файла референсого генома FASTA")
     parser.add_argument("--input", required=True, help="Путь до входного TSV файла с аллелями")
     parser.add_argument("--output", required=True, help="Путь выходного файла")
     args = parser.parse_args()
 
-    if not os.path.exists(args.fasta):
-        logging.critical(f"Ошибка: Референсный файл генома '{args.fasta}' не найден!")
-        sys.exit(1)
-    elif not args.fasta.endswith(('.fa', '.fasta')):
+    if args.fasta and not args.fasta.endswith(('.fa', '.fasta')):
         logging.critical(f"Ошибка: Референсный файл генома '{args.fasta}' не в формате .fa/.fasta")
         sys.exit(1)
 

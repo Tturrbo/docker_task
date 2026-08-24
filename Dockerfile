@@ -1,0 +1,79 @@
+FROM ubuntu:20.04
+
+LABEL \
+    maintainer="Elnukaev Ali" \
+    description="Test_task N10"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    zlib1g-dev \
+    libncurses5-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libssl-dev \
+    libcurl4-gnutls-dev \
+    make \
+    gcc \
+    automake \
+    autoconf \
+    g++ \
+    libtool \
+    pkg-config \
+    libdeflate-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV SOFT="/soft"
+ENV SAMTOOLS_VER=1.24
+ENV BCFTOOLS_VER=1.24
+ENV VCFTOOLS_VER=0.1.17
+
+# NAME:SAMTOOLS V:1.24 RELEASE:09/07/2026
+RUN cd /opt/ \
+    && wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VER}/samtools-${SAMTOOLS_VER}.tar.bz2 \
+    && tar -xjf samtools-${SAMTOOLS_VER}.tar.bz2 \
+    && rm -rf samtools-${SAMTOOLS_VER}.tar.bz2 \
+    && cd samtools-${SAMTOOLS_VER}/ \
+    && ./configure --with-libdeflate --prefix=${SOFT}/samtools_${SAMTOOLS_VER} \
+    && make -j$(nproc) && make install \
+    && cd .. && rm -rf /opt/samtools-${SAMTOOLS_VER}/
+
+# NAME:BCFTOOLS V:1.24 RELEASE:09/07/2026
+RUN cd /opt/ \
+    && wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VER}/bcftools-${BCFTOOLS_VER}.tar.bz2 \
+    && tar -xjf bcftools-${BCFTOOLS_VER}.tar.bz2 \
+    && rm -rf bcftools-${BCFTOOLS_VER}.tar.bz2 \
+    && cd bcftools-${BCFTOOLS_VER}/ \
+    && ./configure --prefix=${SOFT}/bcftools_${BCFTOOLS_VER} \
+    && make -j$(nproc) && make install \
+    && cd .. && rm -rf /opt/bcftools-${BCFTOOLS_VER}/
+
+# NAME:VCFTOOLS V:0.1.17 RELEASE:15/05/2025    
+RUN cd /opt/ \
+    && wget https://github.com/vcftools/vcftools/releases/download/v${VCFTOOLS_VER}/vcftools-${VCFTOOLS_VER}.tar.gz \
+    && tar -xzf vcftools-${VCFTOOLS_VER}.tar.gz \
+    && rm -rf vcftools-${VCFTOOLS_VER}.tar.gz \
+    && cd vcftools-${VCFTOOLS_VER}/ \
+    && ./configure --prefix=${SOFT}/vcftools_${VCFTOOLS_VER} \
+    && make -j$(nproc) && make install \
+    && cd .. && rm -rf /opt/vcftools-${VCFTOOLS_VER}/
+
+ENV SAMTOOLS="/soft/samtools_${SAMTOOLS_VER}/bin"
+ENV BCFTOOLS="/soft/bcftools_${BCFTOOLS_VER}/bin"
+ENV VCFTOOLS="/soft/vcftools_${VCFTOOLS_VER}/bin"
+ENV PATH="${SAMTOOLS}:${BCFTOOLS}:${VCFTOOLS}:${PATH}"
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN pip3 install --no-cache-dir --upgrade pip && \
+    pip3 install --no-cache-dir pysam
+
+COPY ref_alt.py /app/ref_alt.py
+
+CMD ["/bin/bash"]
