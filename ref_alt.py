@@ -23,8 +23,6 @@ file_handler.setFormatter(log_format)
 logger.addHandler(file_handler)
 
 CHROM_DIR = "chromosomes"
-INPUT_TSV = "FP_SNPs_10k_GB38_twoAllelsFormat.tsv"
-OUTPUT_TSV = "output_ref_alt.tsv"
 
 TARGET_CHROMOSOMES = set([f"chr{i}" for i in range(1, 23)] + ["chrX", "chrY", "chrM"])
 
