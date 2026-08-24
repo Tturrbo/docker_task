@@ -10,6 +10,6 @@ awk 'BEGIN{FS=OFS="\t"} $1 != "chr23"' > FP_SNPs_10k_GB38_twoAllelsFormat.tsv
 ```
 ref_alt.py --help
 ```
-`--fasta` принимает на вход путь до файла референсного генома формата `.fa` или `.fasta`
-`--input` принимает на вход путь до предобработанного файла с аллелями(FP_SNPs_10k_GB38_twoAllelsFormat.tsv) формата `.tsv`
+`--fasta` принимает на вход путь до файла референсного генома формата `.fa` или `.fasta` \
+`--input` принимает на вход путь до предобработанного файла с аллелями(FP_SNPs_10k_GB38_twoAllelsFormat.tsv) формата `.tsv` \
 `--output` название итого файла(например, output.txt или output.tsv)
