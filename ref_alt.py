@@ -23,7 +23,6 @@ file_handler.setFormatter(log_format)
 logger.addHandler(file_handler)
 
 CHROM_DIR = "chromosomes"
-
 TARGET_CHROMOSOMES = set([f"chr{i}" for i in range(1, 23)] + ["chrX", "chrY", "chrM"])
 
 # Разбивает референсный геном на хромосомы и индексирует их(исключены хромосомы вида chrUnknown)
